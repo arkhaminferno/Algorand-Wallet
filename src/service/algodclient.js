@@ -10,7 +10,8 @@ let algodClient = new algosdk.Algodv2(algodToken, algodServer, algodPort);
 
 const ClientSetup = async () => {
 try{
-    console.log(await algodClient .status());
+    let instance = await algodClient.getTransactionParams();
+    
 }
 catch(error){
     console.log(error);
