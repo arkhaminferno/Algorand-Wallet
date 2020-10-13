@@ -1,9 +1,9 @@
 import React from 'react'
 import {Button} from "react-bootstrap"
 
-function generate() {
+function generate(props) {
     return (
-        <Button>
+        <Button onClick={props.onClick}>
             Generate Wallet
         </Button>
     )

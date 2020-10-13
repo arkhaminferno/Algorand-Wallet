@@ -1,9 +1,9 @@
 import React from 'react'
 import {Button} from "react-bootstrap";
 
-function mnemonic() {
+function mnemonic(props) {
     return (
-        <Button>
+        <Button onClick={props.onClick}>
             Get Mnemonic key
         </Button>
     )
