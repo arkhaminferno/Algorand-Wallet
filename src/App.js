@@ -1,24 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
+import React from 'react'
 import './App.css';
+import Generate from "./components/buttons/generate"
+import Mnemonic from "./components/buttons/mnemonic"
+import SendTransaction from "./components/buttons/sendTransaction"
+import Input from './components/inputfield/input';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Generate />
+      <Mnemonic />
+      <SendTransaction />
+      
+      <Input placeholder="To"/>
+      <Input placeholder="Amount"/>
     </div>
   );
 }
