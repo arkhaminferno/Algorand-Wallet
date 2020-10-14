@@ -2,9 +2,9 @@ import React from 'react'
 import {Button} from "react-bootstrap";
 
 
-function sendTransaction() {
+function sendTransaction(props) {
     return (
-        <Button>
+        <Button onClick={props.onClick}>
             send Transaction
         </Button>
     )

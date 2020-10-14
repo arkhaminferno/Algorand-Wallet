@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import {Button} from "react-bootstrap"
+import axios from "axios";
 import './App.css';
 import algosdk from "algosdk";
 import {Alert, Container} from "react-bootstrap";
@@ -10,7 +11,7 @@ import AddressInput from './components/inputfield/address';
 import AmountInput from "./components/inputfield/amount";
 import MnemonicModal from "./components/modal/mnemonic"; 
 import Validator from "./components/buttons/validity"
-import {ClientSetup} from "./service/algodclient";
+import {transactionBroadcaster} from "./service/algodclient";
 import Balance from "./components/buttons/balance"
 function App() {
   const [algoclientinstance,setAlgoclientinstance] = useState({});
@@ -23,10 +24,10 @@ function App() {
   const[balance,setBalance]= useState(0);
 
   useEffect(()=>{
-    setAlgoclientinstance(ClientSetup());
- 
-    
+    //  setAlgoclientinstance(instantiateAlgodClient());
   },[])
+
+ 
 
   const toggleMnemonic = ()=> {
     setShowmnemonic(!showMnemonic);
@@ -36,29 +37,61 @@ function App() {
   setShowmnemonic(false);
 }
   const accountGenerator = ()=>{
-    setAccount(algosdk.generateAccount());
-
+    let generatedAccount = algosdk.generateAccount(); 
+    setAccount(generatedAccount);
   }
   const mnemonicGenerator = ()=>{
  setMnemonickey(algosdk.secretKeyToMnemonic(account.sk));
   }
 
   const balanceGetter = ()=>{
-    console.log(algoclientinstance.accountInformation(account.addr));
-  }
-  const validator = ()=>{
-    setIsvalidaddress(algosdk.isValidAddress(account.addr));
+    axios.get(`https://api.testnet.algoexplorer.io/v2/accounts/${addressinput}`).then((res)=>{
+      setBalance(res.data.amount);
+    })
+    }
+  
+ const validator = ()=>{
+    setIsvalidaddress(algosdk.isValidAddress(addressinput));
     isvalidAddress ? alert("Address is valid") : alert("Address is not valid!")
   }
 
+  const transactionbuilder = ()=>{
+    let address = account.addr;
+    let secretkey = account.sk;
+    let to= addressinput;
+    let amount= amountinput;
+    
+    axios.get("https://api.testnet.algoexplorer.io/v2/transactions/params").then((res)=>{
+      let endRound = res.data["last-round"] + parseInt(1000);
+      let txn = {
+        "from": account.addr,
+        "to": to,
+        "fee": res.data.fee,
+        "amount": Number.parseInt(amount),
+        "firstRound":res.data["last-round"],
+        "lastRound": endRound,
+        "genesisID": res.data.["genesis-id"],
+        "genesisHash": res.data.["genesis-hash"],
+        "note": algosdk.encodeObj(`Transaction sent by ${address}`),
+    };
+    
+    const signedTxn = algosdk.signTransaction(txn, secretkey);
+    transactionBroadcaster(signedTxn);
+  
+})
+    
+  }
+
+ 
+
   const addressinputhandler = (e)=>{
 e.preventDefault();
-setAddressinput(...addressinput,e.target.value);
+setAddressinput(e.target.value);
   }
 
   const amountinputhandler = (e)=>{
     e.preventDefault();
-    setAmountinput(...amountinput,e.target.value);
+    setAmountinput(e.target.value);
       }
   
   return (
@@ -66,18 +99,21 @@ setAddressinput(...addressinput,e.target.value);
       <Generate onClick={accountGenerator}/>
       Address : {account.addr}
       Secret Key: {account.sk}
-      Balance:{balance}
       <Mnemonic onClick={toggleMnemonic} />
       <MnemonicModal flag={showMnemonic} generatedkey={mnemonickey} closeModal={closeModal}/>
        <a href="https://bank.testnet.algorand.network/" rel="noopener noreferrer" target="_blank">Get Some Balance </a>
-<Validator onClick={validator}/>
-
+{/* <Validator onClick={validator}/>
+<AddressInput placeholder="Enter Address" onChange={addressinputhandler} />  */}
 <Balance onClick={balanceGetter }/>
 <AddressInput placeholder="Enter Address" onChange={addressinputhandler} />
-      {/* <SendTransaction />
+     
+<h1>Balance is {balance}</h1>
+       <SendTransaction onClick={transactionbuilder}/>
       
       <AddressInput placeholder="To" onChange={addressinputhandler} />
-      <AmountInput placeholder="Amount" onChange={amountinputhandler}/> */}
+      <AmountInput placeholder="Amount" onChange={amountinputhandler}/>
+    
+    
     </Container>
   );
 }
