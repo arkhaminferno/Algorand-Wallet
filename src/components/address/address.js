@@ -1,11 +1,11 @@
 import React from 'react'
 import {Container} from "react-bootstrap"
-function amount(props) {
+function address(props) {
     return (
         <Container className="center">
-        <input type="number" placeholder={props.placeholder} onChange={props.onChange}/>
+            Address {props.Address}
         </Container>
     )
 }
 
-export default amount
+export default address

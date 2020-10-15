@@ -1,12 +1,14 @@
 import React from 'react'
-import {Button} from "react-bootstrap";
+import {Button,Container} from "react-bootstrap";
 
 
 function sendTransaction(props) {
     return (
+        <Container className="center" fluid>
         <Button onClick={props.onClick}>
-            send Transaction
+            send Algo
         </Button>
+        </Container>
     )
 }
 

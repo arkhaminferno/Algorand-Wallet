@@ -1,0 +1,34 @@
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.App{
+   width: 100vw;
+   height: 100vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.jumbotron{
+    width: 60vw;
+    height: 60vh;
+}
+.parent-jumbotron{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.center{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
+}
+
+
+#logo{
+    border: 1px solid black;
+}

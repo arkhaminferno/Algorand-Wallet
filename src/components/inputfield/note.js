@@ -1,11 +1,11 @@
 import React from 'react'
 import {Container} from "react-bootstrap"
-function amount(props) {
+function note(props) {
     return (
         <Container className="center">
-        <input type="number" placeholder={props.placeholder} onChange={props.onChange}/>
+             <input type="text" placeholder={props.placeholder} onChange={props.onChange}/>
         </Container>
     )
 }
 
-export default amount
+export default note

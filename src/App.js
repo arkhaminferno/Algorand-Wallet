@@ -1,18 +1,23 @@
 import React,{useState,useEffect} from 'react'
-import {Button} from "react-bootstrap"
+import {Button,Jumbotron,Image} from "react-bootstrap"
 import axios from "axios";
 import './App.css';
 import algosdk from "algosdk";
+import BalanceDetail from "./components/balance/balance"
+import Note from "./components/inputfield/note"
+import Address from "./components/address/address"
 import {Alert, Container} from "react-bootstrap";
 import Generate from "./components/buttons/generate"
+import NavbarHeading from "./components/navbar/navbar"
 import Mnemonic from "./components/buttons/mnemonic"
 import SendTransaction from "./components/buttons/sendTransaction"
 import AddressInput from './components/inputfield/address';
 import AmountInput from "./components/inputfield/amount";
 import MnemonicModal from "./components/modal/mnemonic"; 
 import Validator from "./components/buttons/validity"
-import {transactionBroadcaster} from "./service/algodclient";
 import Balance from "./components/buttons/balance"
+import {algodClient,postHeader} from "./service/algodclient"
+import Logo from "./components/logo/logo";
 function App() {
   const [algoclientinstance,setAlgoclientinstance] = useState({});
   const [account,setAccount] = useState({});
@@ -22,13 +27,26 @@ function App() {
   const [addressinput,setAddressinput] = useState("");
   const [amountinput,setAmountinput] = useState(0);
   const[balance,setBalance]= useState(0);
+  const [note,setNote] = useState("");
 
   useEffect(()=>{
-    //  setAlgoclientinstance(instantiateAlgodClient());
+    
+
+    
   },[])
 
- 
 
+
+  const transactionBroadcaster= async(blob)=>{
+    axios.post("https://api.testnet.algoexplorer.io/v2/transactions",Buffer.from(blob),{
+      headers:{
+        'Content-Type': 'application/x-binary'
+      }
+    }).then((res)=>{
+      console.log(res);
+    })
+  }  
+ 
   const toggleMnemonic = ()=> {
     setShowmnemonic(!showMnemonic);
     mnemonicGenerator()
@@ -37,7 +55,8 @@ function App() {
   setShowmnemonic(false);
 }
   const accountGenerator = ()=>{
-    let generatedAccount = algosdk.generateAccount(); 
+    let generatedAccount = algosdk.generateAccount();
+    console.log(generatedAccount); 
     setAccount(generatedAccount);
   }
   const mnemonicGenerator = ()=>{
@@ -66,23 +85,25 @@ function App() {
       let txn = {
         "from": account.addr,
         "to": to,
-        "fee": res.data.fee,
-        "amount": Number.parseInt(amount),
+        "fee": res.data["min-fee"],
+        "amount": amountinput,
         "firstRound":res.data["last-round"],
         "lastRound": endRound,
         "genesisID": res.data.["genesis-id"],
         "genesisHash": res.data.["genesis-hash"],
-        "note": algosdk.encodeObj(`Transaction sent by ${address}`),
+        "note": algosdk.encodeObj({note}),
     };
     
-    const signedTxn = algosdk.signTransaction(txn, secretkey);
-    transactionBroadcaster(signedTxn);
+    let signedTxn = algosdk.signTransaction(txn, secretkey);
+    let blob = signedTxn.blob;
+    transactionBroadcaster(blob);
   
+}).catch((err)=>{
+  console.log(err)
 })
     
   }
 
- 
 
   const addressinputhandler = (e)=>{
 e.preventDefault();
@@ -94,26 +115,39 @@ setAddressinput(e.target.value);
     setAmountinput(e.target.value);
       }
   
+      const noteinputhandler = (e)=>{
+        e.preventDefault();
+        setNote(e.target.value);
+          }
   return (
-    <Container className="App">
-      <Generate onClick={accountGenerator}/>
+    <Container className="parent" fluid>
+      {/* <Generate onClick={accountGenerator}/>
       Address : {account.addr}
       Secret Key: {account.sk}
-      <Mnemonic onClick={toggleMnemonic} />
-      <MnemonicModal flag={showMnemonic} generatedkey={mnemonickey} closeModal={closeModal}/>
-       <a href="https://bank.testnet.algorand.network/" rel="noopener noreferrer" target="_blank">Get Some Balance </a>
+      <Mnemonic onClick={toggleMnemonic} /> */}
+      {/* <MnemonicModal flag={showMnemonic} generatedkey={mnemonickey} closeModal={closeModal}/> */}
+      
 {/* <Validator onClick={validator}/>
 <AddressInput placeholder="Enter Address" onChange={addressinputhandler} />  */}
-<Balance onClick={balanceGetter }/>
-<AddressInput placeholder="Enter Address" onChange={addressinputhandler} />
+{/* <Balance onClick={balanceGetter }/>
+<AddressInput placeholder="Enter Address" onChange={addressinputhandler} /> */}
+ <NavbarHeading/>
+    
+  <Container className="App">    
+       
      
-<h1>Balance is {balance}</h1>
-       <SendTransaction onClick={transactionbuilder}/>
-      
-      <AddressInput placeholder="To" onChange={addressinputhandler} />
-      <AmountInput placeholder="Amount" onChange={amountinputhandler}/>
-    
-    
+<Jumbotron className="parent-jumbotron" fluid>
+  
+<Logo/>
+
+<Address />
+<BalanceDetail/>
+<AddressInput placeholder="To" onChange={addressinputhandler} />
+<AmountInput placeholder="Amount" onChange={amountinputhandler}/>
+<Note placeholder="Note" onChange={noteinputhandler} />
+<SendTransaction onClick={transactionbuilder}/>
+</Jumbotron>
+</Container>
     </Container>
   );
 }
