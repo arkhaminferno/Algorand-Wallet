@@ -3,16 +3,12 @@ import {Navbar,Nav,Button,Form,FormControl} from "react-bootstrap"
 function navbar() {
     return (
         <Navbar bg="light" variant="light">
-    <Navbar.Brand href="#home">Navbar</Navbar.Brand>
-    <Nav className="mr-auto">
-      <Nav.Link href="#home">Home</Nav.Link>
-      <Nav.Link href="#features">Features</Nav.Link>
-      <Nav.Link href="#pricing">Pricing</Nav.Link>
+    <Navbar.Brand href="https://www.meld.gold/" target="_blank"><img  
+        height="30%" width="30%" src="/meld-logo.png"/></Navbar.Brand>
+    <Nav className="ml-auto">
+      <Nav.Link href="https://bank.testnet.algorand.network/" target="_blank">Algorand Faucet</Nav.Link>
     </Nav>
-    <Form inline>
-      <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-      <Button variant="outline-primary">Search</Button>
-    </Form>
+    
   </Navbar>
     )
 }

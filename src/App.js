@@ -1,9 +1,10 @@
 import React,{useState,useEffect} from 'react'
-import {Button,Jumbotron,Image} from "react-bootstrap"
+import {Button,Jumbotron,Image,Toast} from "react-bootstrap"
 import axios from "axios";
 import './App.css';
 import algosdk from "algosdk";
 import BalanceDetail from "./components/balance/balance"
+import Toasttxn from "./components/toast/transactiontoast"
 import Note from "./components/inputfield/note"
 import Address from "./components/address/address"
 import {Alert, Container} from "react-bootstrap";
@@ -17,39 +18,45 @@ import MnemonicModal from "./components/modal/mnemonic";
 import Validator from "./components/buttons/validity"
 import Balance from "./components/buttons/balance"
 import {algodClient,postHeader} from "./service/algodclient"
+import Fee from "./components/fee/fee"
 import Logo from "./components/logo/logo";
+import SuccessModal from "./components/modal/success";
 function App() {
   const [algoclientinstance,setAlgoclientinstance] = useState({});
   const [account,setAccount] = useState({});
+  const [params,setParams] = useState({});
+  const [paramsLoaded,setParamsLoaded] = useState(false);
   const [mnemonickey,setMnemonickey] = useState("");
   const [showMnemonic, setShowmnemonic] = useState(false);
   const [isvalidAddress,setIsvalidaddress] = useState(false);
   const [addressinput,setAddressinput] = useState("");
   const [amountinput,setAmountinput] = useState(0);
+  const [showtoast, setShowtoast] = useState(false);
   const[balance,setBalance]= useState(0);
   const [note,setNote] = useState("");
+  const [fee,setFee] = useState(0);
+  const [txnID,setTxnID] = useState("");
+  const [txnsent,setTxnsent] = useState(false);
+ 
 
   useEffect(()=>{
-    
-
-    
+   
+    getParams()
   },[])
 
 
 
-  const transactionBroadcaster= async(blob)=>{
-    axios.post("https://api.testnet.algoexplorer.io/v2/transactions",Buffer.from(blob),{
-      headers:{
-        'Content-Type': 'application/x-binary'
-      }
-    }).then((res)=>{
-      console.log(res);
-    })
-  }  
- 
+  const toggletoast = () => {setShowtoast(true)};
+  const closetoast = ()=> {setShowtoast(false)
+  setTxnsent(false);
+  };
+  const txnstatus = ()=>{
+    setTxnsent(false);
+  }
+  
   const toggleMnemonic = ()=> {
     setShowmnemonic(!showMnemonic);
-    mnemonicGenerator()
+     mnemonicGenerator()
   }
   const closeModal = ()=>{
   setShowmnemonic(false);
@@ -74,33 +81,73 @@ function App() {
     isvalidAddress ? alert("Address is valid") : alert("Address is not valid!")
   }
 
-  const transactionbuilder = ()=>{
-    let address = account.addr;
-    let secretkey = account.sk;
-    let to= addressinput;
-    let amount= amountinput;
-    
+  const getParams = async()=>{
     axios.get("https://api.testnet.algoexplorer.io/v2/transactions/params").then((res)=>{
-      let endRound = res.data["last-round"] + parseInt(1000);
-      let txn = {
-        "from": account.addr,
-        "to": to,
-        "fee": res.data["min-fee"],
-        "amount": amountinput,
-        "firstRound":res.data["last-round"],
-        "lastRound": endRound,
-        "genesisID": res.data.["genesis-id"],
-        "genesisHash": res.data.["genesis-hash"],
-        "note": algosdk.encodeObj({note}),
-    };
-    
-    let signedTxn = algosdk.signTransaction(txn, secretkey);
-    let blob = signedTxn.blob;
-    transactionBroadcaster(blob);
+      setParams(res.data);
+      setParamsLoaded(true);
   
 }).catch((err)=>{
   console.log(err)
 })
+
+  }
+  const transactionbuilder = async()=>{
+    const passphrase = "tomato riot sting festival atom hire outer census siege clog excuse bag electric wasp taxi wealth key pave party child craft damage group absent diamond";
+    let myAccount = algosdk.mnemonicToSecretKey(passphrase);
+    let address = account.addr;
+    let secretkey = account.sk;
+    let to= addressinput;
+    let notedata = note;
+    let feeinput = fee;
+    let amount= Number.parseInt(amountinput);
+      let endRound = params["last-round"] + parseInt(1000);
+      let txn = {
+        "from": "NZID4OI6KOQX2PZ3CFFEK4VA4JFHJ5EMHJGM6UZZZCVRSLGL5Q5HEZXPJI",
+        "to": to,
+        "fee": params["min-fee"],
+        "amount": amount,
+        "firstRound":params["last-round"],
+        "lastRound": endRound,
+        "genesisID": params["genesis-id"],
+        "genesisHash": params["genesis-hash"],
+        "note": algosdk.encodeObj({notedata}),
+    };
+    
+    let signedTxn = algosdk.signTransaction(txn, myAccount.sk);
+    let blob = signedTxn.blob;
+    transactionBroadcaster(blob);
+    
+  }
+
+  const transactionBroadcaster= async(blob)=>{
+    axios.post("https://api.testnet.algoexplorer.io/v2/transactions",Buffer.from(blob),{
+      headers:{
+        'Content-Type': 'application/x-binary'
+      }
+    }).then((res)=>{
+      setTxnID(res.data.txId)
+      setTxnsent(true);
+      toggletoast()
+    })
+  }  
+
+  const formValidator = ()=>{
+    if(paramsLoaded)  {
+      if(addressinput === "" && amountinput === 0 && note === ""){
+        alert("please check your input");
+        return;
+      }
+      else{
+        transactionbuilder()
+      }
+     }
+     else {alert("please reload the page")};
+  }
+ 
+
+  const Feeinputhandler = (e)=>{
+    e.preventDefault();
+    setFee(e.target.value);
     
   }
 
@@ -119,8 +166,11 @@ setAddressinput(e.target.value);
         e.preventDefault();
         setNote(e.target.value);
           }
+
+
   return (
-    <Container className="parent" fluid>
+    <div className="parent" fluid>
+      
       {/* <Generate onClick={accountGenerator}/>
       Address : {account.addr}
       Secret Key: {account.sk}
@@ -136,19 +186,27 @@ setAddressinput(e.target.value);
   <Container className="App">    
        
      
-<Jumbotron className="parent-jumbotron" fluid>
-  
-<Logo/>
+<Jumbotron className="parent-jumbotron" >
+  <Container  className="divider-1 " >
 
-<Address />
+  <Logo/>
+
 <BalanceDetail/>
+<Address />
+
 <AddressInput placeholder="To" onChange={addressinputhandler} />
 <AmountInput placeholder="Amount" onChange={amountinputhandler}/>
 <Note placeholder="Note" onChange={noteinputhandler} />
-<SendTransaction onClick={transactionbuilder}/>
+<AmountInput placeholder="Fee" onChange={Feeinputhandler} />
+<Fee fee={params["min-fee"]}/>
+<SendTransaction onClick={formValidator} />
+<Toasttxn showtoast= {showtoast} transactionID={txnID} closetoast={closetoast}/>
+  </Container>
+  <Container  className="divider-2"> abk</Container>
+
 </Jumbotron>
 </Container>
-    </Container>
+    </div>
   );
 }
 

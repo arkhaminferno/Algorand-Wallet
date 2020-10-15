@@ -3,7 +3,12 @@ import {Container} from "react-bootstrap"
 function balance(props) {
     return (
         <Container className="center">
-            Balance {props.balance}
+                <div className="horizontal-align">
+    <div>Balance  10000     <span>
+<img src="/algosmall.png" height="14px" width="14px"/>
+</span></div>
+  
+                </div>
         </Container>
     )
 }

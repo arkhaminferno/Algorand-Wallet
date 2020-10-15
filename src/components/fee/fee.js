@@ -1,11 +1,12 @@
 import React from 'react'
 import {Container} from "react-bootstrap"
-function input(props) {
+function fee(props) {
     return (
         <Container className="center">
-        <input type="text" placeholder={props.placeholder} onChange={props.onChange} required/>
+             <label id="feelabel">Suggested Fee {props.fee} MicroAlgos </label>
+        
         </Container>
     )
 }
 
-export default input
+export default fee

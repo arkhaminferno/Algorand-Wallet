@@ -1,34 +1,77 @@
-*{
-    margin:0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-.App{
-   width: 100vw;
-   height: 100vh;
-   display: flex;
-   justify-content: center;
-   align-items: center;
+input[type="text"],
+input[type="number"] {
+  outline: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
-
-.jumbotron{
-    width: 60vw;
-    height: 60vh;
-}
-.parent-jumbotron{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+::placeholder {
+  font-size: smaller;
+  text-align: center;
 }
 
-.center{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    
+input:focus {
+  transition: all 1s ease-in;
+}
+.App {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#feelabel {
+  font-size: x-small;
+}
+.jumbotron {
+  width: 80vw;
+  height: 80vh;
+  background-color: #202020 !important;
+  color: white;
+}
+.logobg {
+  background-color: white;
+}
+.parent-jumbotron {
+  display: flex;
 }
 
+.center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
 
-#logo{
-    border: 1px solid black;
+#logo {
+  border: 1px solid black;
+}
+
+.vertical-align {
+  display: flex;
+  flex-direction: column;
+}
+.horizontal-align {
+  display: flex;
+  flex-direction: row;
+}
+
+.divider-1 {
+  width: 20%;
+  border: 5px outset orange;
+  border-radius: 0.8em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background-color: white;
+  color: black;
+}
+
+.divider-2 {
+  width: 80%;
 }
