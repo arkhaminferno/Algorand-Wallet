@@ -9,7 +9,7 @@ function navbar() {
   return (
     <Navbar id="nav-style">
       <Navbar.Brand href="https://www.meld.gold/" target="_blank">
-        <img height="30%" width="30%" src="/meld-logo.png" />
+        <img height="30%" width="30%" src="./meld-logo.png" />
       </Navbar.Brand>
       <Nav className="ml-auto">
         <Nav.Link

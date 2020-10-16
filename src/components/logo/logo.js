@@ -10,7 +10,7 @@ function logo() {
     <Container className="center " fluid>
       <Image
         id="logo"
-        src="/algorandlogo.svg"
+        src="./algorandlogo.svg"
         className="logobg"
         roundedCircle
       />

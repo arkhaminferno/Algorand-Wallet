@@ -14,7 +14,7 @@ function balance(props) {
           Balance: &nbsp;
           {props.balance}
           &nbsp;
-          <img src="/algosmall.png" height="18px" width="17px" />
+          <img src="./algosmall.png" height="18px" width="17px" />
         </div>
       </div>
     </Container>
