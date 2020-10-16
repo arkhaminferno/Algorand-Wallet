@@ -3,7 +3,7 @@ import {Button} from "react-bootstrap"
 
 function generate(props) {
     return (
-        <Button onClick={props.onClick}>
+        <Button id="btn-fixed" onClick={props.onClick}>
             Generate Wallet
         </Button>
     )

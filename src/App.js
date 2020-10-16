@@ -6,6 +6,7 @@ import algosdk from "algosdk";
 import BalanceDetail from "./components/balance/balance"
 import Toasttxn from "./components/toast/transactiontoast"
 import Note from "./components/inputfield/note"
+import AccountDisplay from "./components/accounts/accounts"
 import Address from "./components/address/address"
 import {Alert, Container} from "react-bootstrap";
 import Generate from "./components/buttons/generate"
@@ -18,12 +19,13 @@ import MnemonicModal from "./components/modal/mnemonic";
 import Validator from "./components/buttons/validity"
 import Balance from "./components/buttons/balance"
 import {algodClient,postHeader} from "./service/algodclient"
-import Fee from "./components/fee/fee"
 import Logo from "./components/logo/logo";
 import SuccessModal from "./components/modal/success";
+import Select from 'react-select';
 function App() {
   const [algoclientinstance,setAlgoclientinstance] = useState({});
   const [account,setAccount] = useState({});
+  const [generatedaccounts,setGeneratedaccounts] = useState([]);
   const [params,setParams] = useState({});
   const [paramsLoaded,setParamsLoaded] = useState(false);
   const [mnemonickey,setMnemonickey] = useState("");
@@ -56,18 +58,21 @@ function App() {
   
   const toggleMnemonic = ()=> {
     setShowmnemonic(!showMnemonic);
-     mnemonicGenerator()
   }
   const closeModal = ()=>{
   setShowmnemonic(false);
 }
   const accountGenerator = ()=>{
     let generatedAccount = algosdk.generateAccount();
-    console.log(generatedAccount); 
     setAccount(generatedAccount);
+    setGeneratedaccounts([...generatedaccounts,generatedAccount]);
   }
-  const mnemonicGenerator = ()=>{
- setMnemonickey(algosdk.secretKeyToMnemonic(account.sk));
+  const mnemonicGenerator = (secretkey)=>{
+ setMnemonickey(algosdk.secretKeyToMnemonic(secretkey));
+ toggleMnemonic()
+  }
+  const selectedAccount = (obj)=>{
+setAccount(obj);
   }
 
   const balanceGetter = ()=>{
@@ -98,7 +103,6 @@ function App() {
     let secretkey = account.sk;
     let to= addressinput;
     let notedata = note;
-    let feeinput = fee;
     let amount= Number.parseInt(amountinput);
       let endRound = params["last-round"] + parseInt(1000);
       let txn = {
@@ -113,7 +117,7 @@ function App() {
         "note": algosdk.encodeObj({notedata}),
     };
     
-    let signedTxn = algosdk.signTransaction(txn, myAccount.sk);
+    let signedTxn = algosdk.signTransaction(txn, secretkey);
     let blob = signedTxn.blob;
     transactionBroadcaster(blob);
     
@@ -145,11 +149,7 @@ function App() {
   }
  
 
-  const Feeinputhandler = (e)=>{
-    e.preventDefault();
-    setFee(e.target.value);
-    
-  }
+
 
 
   const addressinputhandler = (e)=>{
@@ -171,10 +171,8 @@ setAddressinput(e.target.value);
   return (
     <div className="parent" fluid>
       
-      {/* <Generate onClick={accountGenerator}/>
-      Address : {account.addr}
-      Secret Key: {account.sk}
-      <Mnemonic onClick={toggleMnemonic} /> */}
+       
+      {/* <Mnemonic onClick={toggleMnemonic} />  */}
       {/* <MnemonicModal flag={showMnemonic} generatedkey={mnemonickey} closeModal={closeModal}/> */}
       
 {/* <Validator onClick={validator}/>
@@ -184,27 +182,43 @@ setAddressinput(e.target.value);
  <NavbarHeading/>
     
   <Container className="App">    
-       
+  
      
-<Jumbotron className="parent-jumbotron" >
-  <Container  className="divider-1 " >
+<Container className="parent-jumbotron" fluid>
+ 
+  <div className="wallet-main " >
+  <div className="generate-btn" >
+<Generate onClick={accountGenerator}/>
+</div>
 
   <Logo/>
 
-<BalanceDetail/>
-<Address />
+<BalanceDetail />
+<Address address={account.addr}/>
 
 <AddressInput placeholder="To" onChange={addressinputhandler} />
 <AmountInput placeholder="Amount" onChange={amountinputhandler}/>
 <Note placeholder="Note" onChange={noteinputhandler} />
-<AmountInput placeholder="Fee" onChange={Feeinputhandler} />
-<Fee fee={params["min-fee"]}/>
 <SendTransaction onClick={formValidator} />
 <Toasttxn showtoast= {showtoast} transactionID={txnID} closetoast={closetoast}/>
-  </Container>
-  <Container  className="divider-2"> abk</Container>
 
-</Jumbotron>
+
+
+
+  </div>
+<br/>
+  <div className="accounts">
+         
+    
+  <MnemonicModal flag={showMnemonic} generatedkey={mnemonickey} closeModal={closeModal}/>
+  {generatedaccounts.map((account,index)=>{
+    return(<AccountDisplay publickey={account.addr} privatekey={account.sk} key={index} mnemonic={ ()=>mnemonicGenerator(account.sk)} onClick={()=>{selectedAccount(account)}} />);
+  })}
+  </div>
+ 
+
+</Container>
+
 </Container>
     </div>
   );

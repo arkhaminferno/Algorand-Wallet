@@ -26,20 +26,25 @@ input:focus {
   justify-content: center;
   align-items: center;
 }
+
+.parent {
+  display: flex;
+  flex-direction: column;
+}
+
 #feelabel {
   font-size: x-small;
 }
-.jumbotron {
-  width: 80vw;
-  height: 80vh;
-  background-color: #202020 !important;
-  color: white;
+.generate-btn {
+  display: flex;
+  flex-direction: column;
 }
 .logobg {
   background-color: white;
 }
 .parent-jumbotron {
-  display: flex;
+  width: 60vw;
+  height: 80vh;
 }
 
 .center {
@@ -47,11 +52,22 @@ input:focus {
   flex-direction: row;
   justify-content: center;
 }
-
+.wallet-main {
+  width: 100%;
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  overflow: auto;
+}
 #logo {
   border: 1px solid black;
 }
-
+.vertical-align-space{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
 .vertical-align {
   display: flex;
   flex-direction: column;
@@ -61,17 +77,19 @@ input:focus {
   flex-direction: row;
 }
 
-.divider-1 {
-  width: 20%;
-  border: 5px outset orange;
-  border-radius: 0.8em;
+.accounts {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  background-color: white;
-  color: black;
+  height: 40%;
+  overflow: auto;
 }
 
-.divider-2 {
-  width: 80%;
+td {
+  font-size: x-small;
+}
+#btn {
+  font-size: x-small;
+}
+
+#btn-fixed {
 }

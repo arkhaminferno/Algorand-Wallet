@@ -10,7 +10,7 @@ function transactiontoast(props) {
               alt=""
             />
             <strong className="mr-auto">Success!</strong>
-            <small>8 seconds ago</small>
+            <small>3 seconds ago</small>
           </Toast.Header>
          
     <Toast.Body><p style={{fontSize:"smaller",wordWrap:"break-word"}}>Your Transaction id is {props.transactionID}.</p> <br/>
