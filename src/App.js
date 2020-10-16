@@ -60,7 +60,7 @@ function App() {
     getParams();
     const interval = setInterval(() => {
       setSeconds((seconds) => seconds + 1);
-      balanceGetter(account.addr); // yaha se mai state me stored address le rha hu
+      balanceGetter(account.addr); 
     }, 1000);
     return () => clearInterval(interval);
   }, []);
