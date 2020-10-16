@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/Algorand-Wallet/static/css/main.3b192cce.chunk.css",
+    "main.js": "/Algorand-Wallet/static/js/main.624f83c3.chunk.js",
+    "main.js.map": "/Algorand-Wallet/static/js/main.624f83c3.chunk.js.map",
+    "runtime-main.js": "/Algorand-Wallet/static/js/runtime-main.3aea0540.js",
+    "runtime-main.js.map": "/Algorand-Wallet/static/js/runtime-main.3aea0540.js.map",
+    "static/css/2.d9ad5f5c.chunk.css": "/Algorand-Wallet/static/css/2.d9ad5f5c.chunk.css",
+    "static/js/2.69cdaace.chunk.js": "/Algorand-Wallet/static/js/2.69cdaace.chunk.js",
+    "static/js/2.69cdaace.chunk.js.map": "/Algorand-Wallet/static/js/2.69cdaace.chunk.js.map",
+    "index.html": "/Algorand-Wallet/index.html",
+    "precache-manifest.9e87b925437615e4e8941b27f83b432a.js": "/Algorand-Wallet/precache-manifest.9e87b925437615e4e8941b27f83b432a.js",
+    "service-worker.js": "/Algorand-Wallet/service-worker.js",
+    "static/css/2.d9ad5f5c.chunk.css.map": "/Algorand-Wallet/static/css/2.d9ad5f5c.chunk.css.map",
+    "static/css/main.3b192cce.chunk.css.map": "/Algorand-Wallet/static/css/main.3b192cce.chunk.css.map",
+    "static/js/2.69cdaace.chunk.js.LICENSE.txt": "/Algorand-Wallet/static/js/2.69cdaace.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.3aea0540.js",
+    "static/css/2.d9ad5f5c.chunk.css",
+    "static/js/2.69cdaace.chunk.js",
+    "static/css/main.3b192cce.chunk.css",
+    "static/js/main.624f83c3.chunk.js"
+  ]
+}
