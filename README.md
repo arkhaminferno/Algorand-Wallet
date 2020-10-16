@@ -1,5 +1,6 @@
 # Algorand Wallet
 
+Algo Wallet is the simple, fast way to send and request algos on the Algorand blockchain.
 
 # What is Algorand Blockchain?
 
