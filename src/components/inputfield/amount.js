@@ -1,5 +1,5 @@
-import React from 'react'
-import {Container} from "react-bootstrap"
+import React from "react";
+import { Container } from "react-bootstrap";
 /**
  * This component will work as a input field.
  * @props placeholder: -> this will display the placeholder on input field.
@@ -7,11 +7,17 @@ import {Container} from "react-bootstrap"
  * @author [Kumar Gaurav](https://github.com/arkhaminferno)
  */
 function amount(props) {
-    return (
-        <Container className="center">
-        <input type="number" placeholder={props.placeholder} onChange={props.onChange} min="0" required/>
-        </Container>
-    )
+  return (
+    <Container className="center">
+      <input
+        type="number"
+        placeholder={props.placeholder}
+        onChange={props.onChange}
+        min="0"
+        required
+      />
+    </Container>
+  );
 }
 
-export default amount
+export default amount;

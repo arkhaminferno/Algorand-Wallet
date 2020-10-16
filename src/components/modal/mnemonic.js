@@ -1,5 +1,5 @@
-import React from 'react'
-import {Modal,Button} from "react-bootstrap"
+import React from "react";
+import { Modal, Button } from "react-bootstrap";
 /**
  * This component will generate modal notification for displaying Seed phrase of an account.
  * @props flag -> a boolean value for displaying the modal.
@@ -9,20 +9,19 @@ import {Modal,Button} from "react-bootstrap"
  * @author [Kumar Gaurav](https://github.com/arkhaminferno)
  */
 function mnemonic(props) {
-   
-    return (
-        <Modal show={props.flag} >
-        <Modal.Header >
-          <Modal.Title>Mnemonic Key</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{props.generatedkey}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={props.closeModal} >
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    )
+  return (
+    <Modal show={props.flag}>
+      <Modal.Header>
+        <Modal.Title>Mnemonic Key</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>{props.generatedkey}</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" id="btn-fixed" onClick={props.closeModal}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
 }
 
-export default mnemonic
+export default mnemonic;
