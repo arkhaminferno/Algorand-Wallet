@@ -3,7 +3,7 @@ import { Navbar, Container, NavbarBrand } from "react-bootstrap";
 
 function Footer() {
   return (
-    <div className="fixed-bottom center">
+    <div className="center">
       <Navbar color="dark" dark>
         <Container>
           <NavbarBrand id="footer-name">
@@ -13,7 +13,7 @@ function Footer() {
             <div className="footer-align">
               <div>
                 <a
-                  href="https://www.linkedin.com/in/arkhaminferno"
+                  href="www.linkedin.com/in/arkhaminferno"
                   id="footerHead"
                   target="_blank"
                 >
@@ -27,7 +27,7 @@ function Footer() {
               </div>
               <div>
                 <a
-                  href="https://www.github.com/arkhaminferno"
+                  href="www.github.com/arkhaminferno"
                   id="footerHead"
                   target="_blank"
                 >
