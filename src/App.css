@@ -8,15 +8,14 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(transparent, #30ff00);
+  background: linear-gradient(transparent, #434343);
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(transparent, #00c6ff);
+  background: linear-gradient(transparent, white);
 }
 
 body {
-  font-family: consolas;
   background: #000000; /* fallback for old browsers */
   background: -webkit-linear-gradient(
     to right,
@@ -86,18 +85,17 @@ input:focus {
   flex-direction: column;
   justify-content: space-evenly;
 
-  border: 1px solid green;
   border-radius: 25px;
-  background: #334d50; /* fallback for old browsers */
+  background: #232526; /* fallback for old browsers */
   background: -webkit-linear-gradient(
-    to right,
-    #cbcaa5,
-    #334d50
+    to bottom,
+    #414345,
+    #232526
   ); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(
-    to right,
-    #cbcaa5,
-    #334d50
+    to bottom,
+    #414345,
+    #232526
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 #logo {
@@ -169,4 +167,14 @@ td {
 
 #footerHead {
   color: white;
+}
+
+#nav-style {
+  background: #232526; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to bottom,
+    #414345,
+    #232526
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #414345, #232526);
 }

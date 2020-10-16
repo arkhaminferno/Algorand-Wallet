@@ -8,7 +8,7 @@ import { Container } from "react-bootstrap";
  */
 function address(props) {
   return (
-    <Container className="center">
+    <Container className="center" id="footerHead">
       <div className="vertical-align">
         <p style={{ margin: "0", padding: "0", textAlign: "center" }}>
           Your Wallet Address:

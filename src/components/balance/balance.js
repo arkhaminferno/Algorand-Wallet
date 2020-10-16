@@ -8,14 +8,13 @@ import { Container } from "react-bootstrap";
  */
 function balance(props) {
   return (
-    <Container className="center">
+    <Container className="center" id="footerHead">
       <div className="horizontal-align">
         <div>
           Balance: &nbsp;
           {props.balance}
-          <span>
-            <img src="/algosmall.png" height="14px" width="14px" />
-          </span>
+          &nbsp;
+          <img src="/algosmall.png" height="18px" width="17px" />
         </div>
       </div>
     </Container>

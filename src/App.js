@@ -16,6 +16,7 @@ import AmountInput from "./components/inputfield/amount";
 import MnemonicModal from "./components/modal/mnemonic";
 import Logo from "./components/logo/logo";
 import Footer from "./components/footer/footer";
+var fs = require("fs");
 /**
  * This component is the parent component responsible for 
  - Ability to create a wallet.
@@ -34,6 +35,7 @@ import Footer from "./components/footer/footer";
  * @state note : string -> stores the string given by a user for sending transaction.
  * @state txnID: string -> stores transaction ID of the successfull transaction
  * @state txnsent:boolean -> flag for indicating whether the transaction is successfull or not.
+ * @state seconds:intger -> for refetching balance component every 3 seconds
  * @author [Kumar Gaurav](https://github.com/arkhaminferno)
  */
 
@@ -51,9 +53,16 @@ function App() {
   const [note, setNote] = useState("");
   const [txnID, setTxnID] = useState("");
   const [txnsent, setTxnsent] = useState(false);
+  const [seconds, setSeconds] = useState(0);
+  const [addr, setAddr] = useState("");
 
   useEffect(() => {
     getParams();
+    const interval = setInterval(() => {
+      setSeconds((seconds) => seconds + 1);
+      balanceGetter(account.addr); // yaha se mai state me stored address le rha hu
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   // Function for getting parameters from the algorand blockchain
@@ -84,11 +93,16 @@ function App() {
 
   // Function  for getting balance of an address
   const balanceGetter = (address) => {
-    axios
-      .get(`https://api.testnet.algoexplorer.io/v2/accounts/${address}`)
-      .then((res) => {
-        setBalance(res.data.amount);
-      });
+    if (address) {
+      axios
+        .get(`https://api.testnet.algoexplorer.io/v2/accounts/${address}`)
+        .then((res) => {
+          setBalance(res.data.amount);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
   };
 
   // Function for creating,signing transaction object
@@ -146,11 +160,11 @@ function App() {
 
   // Exporting seed phrase
 
-  const downloadTxtFile = () => {
+  const downloadTxtFile = (mnemonic) => {
     const element = document.createElement("a");
-    const file = new Blob([mnemonickey], { type: "text/plain" });
+    const file = new Blob([mnemonic], { type: "text/plain" });
     element.href = URL.createObjectURL(file);
-    element.download = "myFile.txt";
+    element.download = "seedPhrase.txt";
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
   };
@@ -251,6 +265,10 @@ function App() {
                   publickey={account.addr}
                   privatekey={account.sk}
                   key={index}
+                  exportsk={() => {
+                    let mnemonic = algosdk.secretKeyToMnemonic(account.sk)
+                    downloadTxtFile(mnemonic);
+                  }}
                   mnemonic={() => mnemonicGenerator(account.sk)}
                   onClick={() => {
                     selectedAccount(account);

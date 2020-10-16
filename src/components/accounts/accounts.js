@@ -37,7 +37,7 @@ function accounts(props) {
                 </div>
                 &nbsp;
                 <div>
-                  <Button id="btn" size="sm" onClick={props.mnemonic}>
+                  <Button id="btn" size="sm" onClick={props.exportsk}>
                     Export wallet
                   </Button>
                 </div>
