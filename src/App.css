@@ -63,7 +63,7 @@ input:focus {
 #logo {
   border: 1px solid black;
 }
-.vertical-align-space{
+.vertical-align-space {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -91,5 +91,9 @@ td {
   font-size: x-small;
 }
 
-#btn-fixed {
+.toast {
+  position: fixed;
+  width: 100%;
+  bottom: 20px;
+  right: 50px;
 }

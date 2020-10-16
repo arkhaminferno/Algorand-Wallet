@@ -1,5 +1,11 @@
 import React from 'react'
 import {Container} from "react-bootstrap"
+/**
+ * This component will display address.
+ * 
+ * 
+ * @author [Kumar Gaurav](https://github.com/arkhaminferno)
+ */
 function address(props) {
     return (
         <Container className="center">

@@ -1,5 +1,4 @@
 import React,{useState,useEffect} from 'react'
-import {Button,Jumbotron,Image,Toast} from "react-bootstrap"
 import axios from "axios";
 import './App.css';
 import algosdk from "algosdk";
@@ -8,84 +7,59 @@ import Toasttxn from "./components/toast/transactiontoast"
 import Note from "./components/inputfield/note"
 import AccountDisplay from "./components/accounts/accounts"
 import Address from "./components/address/address"
-import {Alert, Container} from "react-bootstrap";
+import {Container} from "react-bootstrap";
 import Generate from "./components/buttons/generate"
 import NavbarHeading from "./components/navbar/navbar"
-import Mnemonic from "./components/buttons/mnemonic"
 import SendTransaction from "./components/buttons/sendTransaction"
 import AddressInput from './components/inputfield/address';
 import AmountInput from "./components/inputfield/amount";
 import MnemonicModal from "./components/modal/mnemonic"; 
-import Validator from "./components/buttons/validity"
-import Balance from "./components/buttons/balance"
-import {algodClient,postHeader} from "./service/algodclient"
 import Logo from "./components/logo/logo";
-import SuccessModal from "./components/modal/success";
-import Select from 'react-select';
+
+
+/**
+ * This component is the parent component responsible for 
+ - Ability to create a wallet.
+ -  Display balance
+ - Send a transaction
+ * @state account: object -> loads the currently selected account details 
+ * @state generatedaccounts: array -> Stores the account details of generated accounts by the user. 
+ * @state params: object -> stores the predicted parameters for bulding transaction object
+ * @state paramsLoaded: boolean -> true when all the parameters are loaded into the state of this component.
+ * @state mnemonickey: string -> stores the mnemonic key of  the selected account by the user. 
+ * @state showMnemonic: boolean -> flag boolean value for displaying mnemonic of the selected account of user
+ * @state addressinput: string -> stores the address of the receiver account.
+ * @state amountinput: integer -> stores the amount 
+ * @state showtoast: boolean -> flag for displaying toast notification.
+ * @state balance: integer -> stores the balance of the currently selected account.
+ * @state note : string -> stores the string given by a user for sending transaction.
+ * @state txnID: string -> stores transaction ID of the successfull transaction
+ * @state txnsent:boolean -> flag for indicating whether the transaction is successfull or not.
+ * @author [Kumar Gaurav](https://github.com/arkhaminferno)
+ */
+
 function App() {
-  const [algoclientinstance,setAlgoclientinstance] = useState({});
   const [account,setAccount] = useState({});
   const [generatedaccounts,setGeneratedaccounts] = useState([]);
   const [params,setParams] = useState({});
   const [paramsLoaded,setParamsLoaded] = useState(false);
   const [mnemonickey,setMnemonickey] = useState("");
   const [showMnemonic, setShowmnemonic] = useState(false);
-  const [isvalidAddress,setIsvalidaddress] = useState(false);
   const [addressinput,setAddressinput] = useState("");
   const [amountinput,setAmountinput] = useState(0);
   const [showtoast, setShowtoast] = useState(false);
   const[balance,setBalance]= useState(0);
   const [note,setNote] = useState("");
-  const [fee,setFee] = useState(0);
   const [txnID,setTxnID] = useState("");
   const [txnsent,setTxnsent] = useState(false);
  
 
   useEffect(()=>{
    
-    getParams()
+     getParams()
   },[])
 
-
-
-  const toggletoast = () => {setShowtoast(true)};
-  const closetoast = ()=> {setShowtoast(false)
-  setTxnsent(false);
-  };
-  const txnstatus = ()=>{
-    setTxnsent(false);
-  }
-  
-  const toggleMnemonic = ()=> {
-    setShowmnemonic(!showMnemonic);
-  }
-  const closeModal = ()=>{
-  setShowmnemonic(false);
-}
-  const accountGenerator = ()=>{
-    let generatedAccount = algosdk.generateAccount();
-    setAccount(generatedAccount);
-    setGeneratedaccounts([...generatedaccounts,generatedAccount]);
-  }
-  const mnemonicGenerator = (secretkey)=>{
- setMnemonickey(algosdk.secretKeyToMnemonic(secretkey));
- toggleMnemonic()
-  }
-  const selectedAccount = (obj)=>{
-setAccount(obj);
-  }
-
-  const balanceGetter = ()=>{
-    axios.get(`https://api.testnet.algoexplorer.io/v2/accounts/${addressinput}`).then((res)=>{
-      setBalance(res.data.amount);
-    })
-    }
-  
- const validator = ()=>{
-    setIsvalidaddress(algosdk.isValidAddress(addressinput));
-    isvalidAddress ? alert("Address is valid") : alert("Address is not valid!")
-  }
-
+  // Function for getting parameters from the algorand blockchain 
   const getParams = async()=>{
     axios.get("https://api.testnet.algoexplorer.io/v2/transactions/params").then((res)=>{
       setParams(res.data);
@@ -96,126 +70,146 @@ setAccount(obj);
 })
 
   }
-  const transactionbuilder = async()=>{
-    const passphrase = "tomato riot sting festival atom hire outer census siege clog excuse bag electric wasp taxi wealth key pave party child craft damage group absent diamond";
-    let myAccount = algosdk.mnemonicToSecretKey(passphrase);
-    let address = account.addr;
-    let secretkey = account.sk;
-    let to= addressinput;
-    let notedata = note;
-    let amount= Number.parseInt(amountinput);
-      let endRound = params["last-round"] + parseInt(1000);
-      let txn = {
-        "from": "NZID4OI6KOQX2PZ3CFFEK4VA4JFHJ5EMHJGM6UZZZCVRSLGL5Q5HEZXPJI",
-        "to": to,
-        "fee": params["min-fee"],
-        "amount": amount,
-        "firstRound":params["last-round"],
-        "lastRound": endRound,
-        "genesisID": params["genesis-id"],
-        "genesisHash": params["genesis-hash"],
-        "note": algosdk.encodeObj({notedata}),
-    };
-    
-    let signedTxn = algosdk.signTransaction(txn, secretkey);
-    let blob = signedTxn.blob;
-    transactionBroadcaster(blob);
-    
+// Function for generating wallets  
+  const accountGenerator = ()=>{
+    let generatedAccount = algosdk.generateAccount();
+    setAccount(generatedAccount);
+    balanceGetter(generatedAccount.addr);
+    setGeneratedaccounts([...generatedaccounts,generatedAccount]);
   }
 
-  const transactionBroadcaster= async(blob)=>{
-    axios.post("https://api.testnet.algoexplorer.io/v2/transactions",Buffer.from(blob),{
-      headers:{
-        'Content-Type': 'application/x-binary'
-      }
-    }).then((res)=>{
-      setTxnID(res.data.txId)
-      setTxnsent(true);
-      toggletoast()
+  // Function for generating seed phrase from secret key
+  const mnemonicGenerator = (secretkey)=>{
+ setMnemonickey(algosdk.secretKeyToMnemonic(secretkey));
+ toggleMnemonic()
+  }
+
+
+  // Function  for getting balance of an address
+  const balanceGetter = (address)=>{
+    axios.get(`https://api.testnet.algoexplorer.io/v2/accounts/${address}`).then((res)=>{
+      setBalance(res.data.amount);
     })
-  }  
+    }
+
+    // Function for creating,signing transaction object 
+    const transactionbuilder = async()=>{
+      const passphrase = "tomato riot sting festival atom hire outer census siege clog excuse bag electric wasp taxi wealth key pave party child craft damage group absent diamond";
+      let myAccount = algosdk.mnemonicToSecretKey(passphrase);
+      let address = account.addr;
+      let secretkey = account.sk;
+      let to= addressinput;
+      let notedata = note;
+      let amount= Number.parseInt(amountinput);
+        let endRound = params["last-round"] + parseInt(1000);
+        let txn = {
+          "from": address,
+          "to": to,
+          "fee": params["min-fee"],
+          "amount": amount,
+          "firstRound":params["last-round"],
+          "lastRound": endRound,
+          "genesisID": params["genesis-id"],
+          "genesisHash": params["genesis-hash"],
+          "note": algosdk.encodeObj({notedata}),
+      };
+      
+      let signedTxn = algosdk.signTransaction(txn, secretkey);
+      let blob = signedTxn.blob;
+      transactionBroadcaster(blob);
+      
+    }
+  
+    // Function for sending the transaction into the Algorand blockchain 
+    const transactionBroadcaster= async(blob)=>{
+      axios.post("https://api.testnet.algoexplorer.io/v2/transactions",Buffer.from(blob),{
+        headers:{
+          'Content-Type': 'application/x-binary'
+        }
+      }).then((res)=>{
+        setTxnID(res.data.txId)
+        setTxnsent(true);
+        toggletoast()
+      })
+    }  
+
+// Function for selecting account from list of generated accounts 
+    const selectedAccount = (obj)=>{
+      setAccount(obj);
+      balanceGetter(obj.addr);
+        }
+      
+  
+  // set flag values to display a component
+  const toggletoast = () => {setShowtoast(true)};
+  const closetoast = ()=> {setShowtoast(false)
+  setTxnsent(false);
+  };
+
+  const txnstatus = ()=>{
+    setTxnsent(false);
+  }
+  
+  const toggleMnemonic = ()=> {
+    setShowmnemonic(!showMnemonic);
+  }
+  const closeModal = ()=>{
+  setShowmnemonic(false);
+}
+ 
+
+ // form validator function
 
   const formValidator = ()=>{
     if(paramsLoaded)  {
-      if(addressinput === "" && amountinput === 0 && note === ""){
-        alert("please check your input");
-        return;
-      }
-      else{
         transactionbuilder()
-      }
      }
-     else {alert("please reload the page")};
-  }
- 
-
-
-
-
-  const addressinputhandler = (e)=>{
-e.preventDefault();
-setAddressinput(e.target.value);
+     else {alert("please check input or reload the page")};
   }
 
-  const amountinputhandler = (e)=>{
-    e.preventDefault();
-    setAmountinput(e.target.value);
-      }
+// input handlers
+const addressinputhandler = (e)=>{
+  e.preventDefault();
+  setAddressinput(e.target.value);
+
+  }
+
+const amountinputhandler = (e)=>{
+  e.preventDefault();
+  setAmountinput(e.target.value);
+  }
   
-      const noteinputhandler = (e)=>{
-        e.preventDefault();
-        setNote(e.target.value);
-          }
+const noteinputhandler = (e)=>{
+  e.preventDefault();
+  setNote(e.target.value);
+  }
 
 
   return (
     <div className="parent" fluid>
-      
-       
-      {/* <Mnemonic onClick={toggleMnemonic} />  */}
-      {/* <MnemonicModal flag={showMnemonic} generatedkey={mnemonickey} closeModal={closeModal}/> */}
-      
-{/* <Validator onClick={validator}/>
-<AddressInput placeholder="Enter Address" onChange={addressinputhandler} />  */}
-{/* <Balance onClick={balanceGetter }/>
-<AddressInput placeholder="Enter Address" onChange={addressinputhandler} /> */}
  <NavbarHeading/>
-    
   <Container className="App">    
-  
-     
+  <Toasttxn showtoast= {showtoast} transactionID={txnID} closetoast={closetoast}/>
 <Container className="parent-jumbotron" fluid>
- 
   <div className="wallet-main " >
   <div className="generate-btn" >
 <Generate onClick={accountGenerator}/>
 </div>
-
   <Logo/>
-
-<BalanceDetail />
+<BalanceDetail balance={balance}/>
 <Address address={account.addr}/>
-
 <AddressInput placeholder="To" onChange={addressinputhandler} />
 <AmountInput placeholder="Amount" onChange={amountinputhandler}/>
 <Note placeholder="Note" onChange={noteinputhandler} />
 <SendTransaction onClick={formValidator} />
-<Toasttxn showtoast= {showtoast} transactionID={txnID} closetoast={closetoast}/>
-
-
-
-
   </div>
 <br/>
-  <div className="accounts">
-         
-    
+  <div className="accounts">    
   <MnemonicModal flag={showMnemonic} generatedkey={mnemonickey} closeModal={closeModal}/>
   {generatedaccounts.map((account,index)=>{
     return(<AccountDisplay publickey={account.addr} privatekey={account.sk} key={index} mnemonic={ ()=>mnemonicGenerator(account.sk)} onClick={()=>{selectedAccount(account)}} />);
   })}
   </div>
- 
 
 </Container>
 
