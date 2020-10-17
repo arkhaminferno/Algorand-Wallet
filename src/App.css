@@ -61,7 +61,8 @@ input:focus {
 #feelabel {
   font-size: x-small;
 }
-.generate-btn {
+.generate-btn,
+.import-btn {
   display: flex;
   flex-direction: column;
 }

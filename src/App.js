@@ -13,10 +13,12 @@ import NavbarHeading from "./components/navbar/navbar";
 import SendTransaction from "./components/buttons/sendTransaction";
 import AddressInput from "./components/inputfield/address";
 import AmountInput from "./components/inputfield/amount";
+import ImportButton from "./components/buttons/importwallet";
 import MnemonicModal from "./components/modal/mnemonic";
+import SeedphraseInputModal from "./components/modal/seedphraseInput";
 import Logo from "./components/logo/logo";
 import Footer from "./components/footer/footer";
-var fs = require("fs");
+
 /**
  * This component is the parent component responsible for 
  - Ability to create a wallet.
@@ -46,23 +48,24 @@ function App() {
   const [paramsLoaded, setParamsLoaded] = useState(false);
   const [mnemonickey, setMnemonickey] = useState("");
   const [showMnemonic, setShowmnemonic] = useState(false);
+  const [inputmnemonickey, setInputmnemonickey] = useState("");
   const [addressinput, setAddressinput] = useState("");
   const [amountinput, setAmountinput] = useState(0);
   const [showtoast, setShowtoast] = useState(false);
   const [balance, setBalance] = useState(0);
   const [note, setNote] = useState("");
   const [txnID, setTxnID] = useState("");
+  const [showinputMnemonic, setShowinputMnemonic] = useState(false);
   const [txnsent, setTxnsent] = useState(false);
   const [seconds, setSeconds] = useState(0);
-  const [addr, setAddr] = useState("");
 
   useEffect(() => {
-    getParams();
-    const interval = setInterval(() => {
-      setSeconds((seconds) => seconds + 1);
-      balanceGetter(account.addr); 
-    }, 1000);
-    return () => clearInterval(interval);
+    // getParams();
+    // const interval = setInterval(() => {
+    //   setSeconds((seconds) => seconds + 1);
+    //   balanceGetter(account.addr);
+    // }, 1000);
+    // return () => clearInterval(interval);
   }, []);
 
   // Function for getting parameters from the algorand blockchain
@@ -93,23 +96,18 @@ function App() {
 
   // Function  for getting balance of an address
   const balanceGetter = (address) => {
-    if (address) {
-      axios
-        .get(`https://api.testnet.algoexplorer.io/v2/accounts/${address}`)
-        .then((res) => {
-          setBalance(res.data.amount);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
+    axios
+      .get(`https://api.testnet.algoexplorer.io/v2/accounts/${address}`)
+      .then((res) => {
+        setBalance(res.data.amount);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   // Function for creating,signing transaction object
   const transactionbuilder = async () => {
-    const passphrase =
-      "tomato riot sting festival atom hire outer census siege clog excuse bag electric wasp taxi wealth key pave party child craft damage group absent diamond";
-    let myAccount = algosdk.mnemonicToSecretKey(passphrase);
     let address = account.addr;
     let secretkey = account.sk;
     let to = addressinput;
@@ -152,6 +150,19 @@ function App() {
       });
   };
 
+  // Function for importing wallet from the seedphrase
+
+  const importSecretkey = () => {
+    let mnemonickey = inputmnemonickey;
+    let accountdetail = algosdk.mnemonicToSecretKey(mnemonickey);
+    let flag = generatedaccounts.some(
+      (address) => address.addr === accountdetail.addr
+    );
+    flag
+      ? alert("you have imported this account already!")
+      : setGeneratedaccounts([...generatedaccounts, accountdetail]);
+  };
+
   // Function for selecting account from list of generated accounts
   const selectedAccount = (obj) => {
     setAccount(obj);
@@ -185,6 +196,14 @@ function App() {
   const toggleMnemonic = () => {
     setShowmnemonic(!showMnemonic);
   };
+
+  const toggleseedphrasemodal = () => {
+    setShowinputMnemonic(true);
+  };
+
+  const closeseedphrasemodal = () => {
+    setShowinputMnemonic(false);
+  };
   const closeModal = () => {
     setShowmnemonic(false);
   };
@@ -213,6 +232,10 @@ function App() {
   const noteinputhandler = (e) => {
     e.preventDefault();
     setNote(e.target.value);
+  };
+  const mnemonicinputhandler = (mnemonickey) => {
+    console.log(mnemonickey);
+    setInputmnemonickey(mnemonickey);
   };
 
   return (
@@ -243,15 +266,34 @@ function App() {
               <AmountInput placeholder="Amount" onChange={amountinputhandler} />
             </div>
             <div>
-              <Note placeholder="Note" onChange={noteinputhandler} />
+              <Note placeholder="Note" onChange={() => noteinputhandler} />
             </div>
             <div>
               <SendTransaction onClick={formValidator} />
             </div>
           </div>
-          <br></br>
+          <br />
           <div className="generate-btn">
             <Generate onClick={accountGenerator} />
+          </div>
+          <br />
+          <div className="import-btn">
+            <ImportButton
+              onClick={toggleseedphrasemodal}
+              sendPhrase={() => {
+                importSecretkey();
+              }}
+            />
+            <SeedphraseInputModal
+              toggleflag={showinputMnemonic}
+              onChange={(e) => {
+                mnemonicinputhandler(e);
+              }}
+              onClick={importSecretkey}
+              closemodal={() => {
+                closeseedphrasemodal();
+              }}
+            />
           </div>
           <div className="accounts">
             <MnemonicModal
@@ -266,7 +308,7 @@ function App() {
                   privatekey={account.sk}
                   key={index}
                   exportsk={() => {
-                    let mnemonic = algosdk.secretKeyToMnemonic(account.sk)
+                    let mnemonic = algosdk.secretKeyToMnemonic(account.sk);
                     downloadTxtFile(mnemonic);
                   }}
                   mnemonic={() => mnemonicGenerator(account.sk)}
