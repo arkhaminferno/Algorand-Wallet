@@ -153,15 +153,20 @@ function App() {
 
   // Function for importing wallet from the seedphrase
 
-  const importSecretkey = () => {
+  const importSecretkey = async() => {
     if (inputmnemonickey) {
-      let accountdetail = algosdk.mnemonicToSecretKey(inputmnemonickey);
-      let flag = generatedaccounts.some(
-        (address) => address.addr === accountdetail.addr
-      );
-      flag
-        ? alert("you have imported this account already!")
-        : setGeneratedaccounts([...generatedaccounts, accountdetail]);
+     
+      try {
+        let accountdetail = algosdk.mnemonicToSecretKey(inputmnemonickey);
+        let flag = generatedaccounts.some(
+          (address) => address.addr === accountdetail.addr
+        );
+        flag
+          ? alert("you have imported this account already!")
+          : setGeneratedaccounts([...generatedaccounts, accountdetail]);
+      } catch(e) {
+        alert("Please Input correct mnemonic key");
+      }
     } else {
       alert("Enter valid mnemonic phrase");
     }
