@@ -37,7 +37,8 @@ import Footer from "./components/footer/footer";
  * @state note : string -> stores the string given by a user for sending transaction.
  * @state txnID: string -> stores transaction ID of the successfull transaction
  * @state txnsent:boolean -> flag for indicating whether the transaction is successfull or not.
- * @state seconds:intger -> for refetching balance component every 3 seconds
+ * @state seconds:integer -> for refetching balance component every 3 seconds
+ * @state inputmnemonickey:string -> for storing typed mnemonic phrase by the user.
  * @author [Kumar Gaurav](https://github.com/arkhaminferno)
  */
 
@@ -60,12 +61,12 @@ function App() {
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
-    // getParams();
-    // const interval = setInterval(() => {
-    //   setSeconds((seconds) => seconds + 1);
-    //   balanceGetter(account.addr);
-    // }, 1000);
-    // return () => clearInterval(interval);
+    getParams();
+    const interval = setInterval(() => {
+      setSeconds((seconds) => seconds + 1);
+      balanceGetter(account.addr);
+    }, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   // Function for getting parameters from the algorand blockchain
@@ -153,14 +154,17 @@ function App() {
   // Function for importing wallet from the seedphrase
 
   const importSecretkey = () => {
-    let mnemonickey = inputmnemonickey;
-    let accountdetail = algosdk.mnemonicToSecretKey(mnemonickey);
-    let flag = generatedaccounts.some(
-      (address) => address.addr === accountdetail.addr
-    );
-    flag
-      ? alert("you have imported this account already!")
-      : setGeneratedaccounts([...generatedaccounts, accountdetail]);
+    if (inputmnemonickey) {
+      let accountdetail = algosdk.mnemonicToSecretKey(inputmnemonickey);
+      let flag = generatedaccounts.some(
+        (address) => address.addr === accountdetail.addr
+      );
+      flag
+        ? alert("you have imported this account already!")
+        : setGeneratedaccounts([...generatedaccounts, accountdetail]);
+    } else {
+      alert("Enter valid mnemonic phrase");
+    }
   };
 
   // Function for selecting account from list of generated accounts
@@ -212,7 +216,19 @@ function App() {
 
   const formValidator = () => {
     if (paramsLoaded) {
-      transactionbuilder();
+      if (algosdk.isValidAddress(addressinput)) {
+        if (amountinput) {
+          if (note) {
+            transactionbuilder();
+          } else {
+            alert("please input note");
+          }
+        } else {
+          alert("please input correct amount");
+        }
+      } else {
+        alert("please input correct address");
+      }
     } else {
       alert("please check input or reload the page");
     }
@@ -234,7 +250,6 @@ function App() {
     setNote(e.target.value);
   };
   const mnemonicinputhandler = (mnemonickey) => {
-    console.log(mnemonickey);
     setInputmnemonickey(mnemonickey);
   };
 
@@ -266,7 +281,7 @@ function App() {
               <AmountInput placeholder="Amount" onChange={amountinputhandler} />
             </div>
             <div>
-              <Note placeholder="Note" onChange={() => noteinputhandler} />
+              <Note placeholder="Note" onChange={noteinputhandler} />
             </div>
             <div>
               <SendTransaction onClick={formValidator} />
