@@ -29,7 +29,7 @@ function seedphraseInput(props) {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" id="btn-fixed" onClick={props.onClick}>
-          Submit
+          Restore Account
         </Button>
         <Button variant="secondary" id="btn-fixed" onClick={props.closemodal}>
           Close

@@ -155,6 +155,10 @@ td {
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
+#btn-fixed-transparent {
+  border-radius: 25px;
+  background: transparent;
+}
 #footer-name {
   font-size: small;
   color: white;
@@ -178,4 +182,16 @@ td {
     #232526
   ); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to bottom, #414345, #232526);
+}
+
+select {
+  background-color: transparent;
+  border-radius: 25px;
+  padding: 0.4em;
+  color: white;
+  border-color: #007bff;
+}
+select:hover {
+  border-color: #0062cc;
+  cursor: pointer;
 }

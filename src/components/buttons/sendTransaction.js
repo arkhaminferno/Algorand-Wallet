@@ -10,8 +10,8 @@ import { Button, Container } from "react-bootstrap";
 function sendTransaction(props) {
   return (
     <Container className="center" fluid>
-      <Button onClick={props.onClick} type="submit" id="btn-fixed">
-        send Algo
+      <Button onClick={props.onClick} type="submit" id="btn-fixed-transparent">
+        send Algos
       </Button>
     </Container>
   );

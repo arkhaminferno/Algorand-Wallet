@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Button } from "react-bootstrap";
 import axios from "axios";
 import "./App.css";
 import algosdk from "algosdk";
@@ -9,7 +10,9 @@ import AccountDisplay from "./components/accounts/accounts";
 import Address from "./components/address/address";
 import { Container } from "react-bootstrap";
 import Generate from "./components/buttons/generate";
+import Dropdown from "./components/dropdown/dropdown";
 import NavbarHeading from "./components/navbar/navbar";
+import Select from "react-select";
 import SendTransaction from "./components/buttons/sendTransaction";
 import AddressInput from "./components/inputfield/address";
 import AmountInput from "./components/inputfield/amount";
@@ -39,6 +42,7 @@ import Footer from "./components/footer/footer";
  * @state txnsent:boolean -> flag for indicating whether the transaction is successfull or not.
  * @state seconds:integer -> for refetching balance component every 3 seconds
  * @state inputmnemonickey:string -> for storing typed mnemonic phrase by the user.
+ * @state APIurl:string -> stores the API url for alogorand testnet and mainnet
  * @author [Kumar Gaurav](https://github.com/arkhaminferno)
  */
 
@@ -49,7 +53,6 @@ function App() {
   const [paramsLoaded, setParamsLoaded] = useState(false);
   const [mnemonickey, setMnemonickey] = useState("");
   const [showMnemonic, setShowmnemonic] = useState(false);
-  const [inputmnemonickey, setInputmnemonickey] = useState("");
   const [addressinput, setAddressinput] = useState("");
   const [amountinput, setAmountinput] = useState(0);
   const [showtoast, setShowtoast] = useState(false);
@@ -59,28 +62,32 @@ function App() {
   const [showinputMnemonic, setShowinputMnemonic] = useState(false);
   const [txnsent, setTxnsent] = useState(false);
   const [seconds, setSeconds] = useState(0);
+  const [inputmnemonickey, setInputmnemonickey] = useState("");
+  const [APIurl, setAPIurl] = useState("https://api.algoexplorer.io");
 
   useEffect(() => {
     getParams();
-    const interval = setInterval(() => {
-      setSeconds((seconds) => seconds + 1);
-      balanceGetter(account.addr);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
+    // const interval = setInterval(() => {
+    //   setSeconds((seconds) => seconds + 1);
+    //   balanceGetter(account.addr);
+    // }, 10000);
+    // return () => clearInterval(interval);
+  }, [APIurl]);
 
   // Function for getting parameters from the algorand blockchain
   const getParams = async () => {
     axios
-      .get("https://api.testnet.algoexplorer.io/v2/transactions/params")
+      .get(`${APIurl}/v2/transactions/params`)
       .then((res) => {
         setParams(res.data);
         setParamsLoaded(true);
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
   // Function for generating wallets
   const accountGenerator = () => {
     let generatedAccount = algosdk.generateAccount();
@@ -98,7 +105,7 @@ function App() {
   // Function  for getting balance of an address
   const balanceGetter = (address) => {
     axios
-      .get(`https://api.testnet.algoexplorer.io/v2/accounts/${address}`)
+      .get(`${APIurl}/v2/accounts/${address}`)
       .then((res) => {
         setBalance(res.data.amount);
       })
@@ -135,27 +142,25 @@ function App() {
   // Function for sending the transaction into the Algorand blockchain
   const transactionBroadcaster = async (blob) => {
     axios
-      .post(
-        "https://api.testnet.algoexplorer.io/v2/transactions",
-        Buffer.from(blob),
-        {
-          headers: {
-            "Content-Type": "application/x-binary",
-          },
-        }
-      )
+      .post(`${APIurl}/v2/transactions`, Buffer.from(blob), {
+        headers: {
+          "Content-Type": "application/x-binary",
+        },
+      })
       .then((res) => {
         setTxnID(res.data.txId);
         setTxnsent(true);
         toggletoast();
+      })
+      .catch((e) => {
+        alert(e);
       });
   };
 
   // Function for importing wallet from the seedphrase
 
-  const importSecretkey = async() => {
+  const importSecretkey = async () => {
     if (inputmnemonickey) {
-     
       try {
         let accountdetail = algosdk.mnemonicToSecretKey(inputmnemonickey);
         let flag = generatedaccounts.some(
@@ -164,7 +169,7 @@ function App() {
         flag
           ? alert("you have imported this account already!")
           : setGeneratedaccounts([...generatedaccounts, accountdetail]);
-      } catch(e) {
+      } catch (e) {
         alert("Please Input correct mnemonic key");
       }
     } else {
@@ -222,7 +227,7 @@ function App() {
   const formValidator = () => {
     if (paramsLoaded) {
       if (algosdk.isValidAddress(addressinput)) {
-        if (amountinput) {
+        if (amountinput && amountinput > 0) {
           if (note) {
             transactionbuilder();
           } else {
@@ -261,12 +266,14 @@ function App() {
   return (
     <div className="parent" fluid>
       <NavbarHeading />
+
       <Container className="App">
         <Toasttxn
           showtoast={showtoast}
           transactionID={txnID}
           closetoast={closetoast}
         />
+
         <Container className="parent-jumbotron" fluid>
           <div className="wallet-main ">
             <div>
@@ -283,10 +290,20 @@ function App() {
               <AddressInput placeholder="To" onChange={addressinputhandler} />
             </div>
             <div>
-              <AmountInput placeholder="Amount" onChange={amountinputhandler} />
+              <AmountInput
+                placeholder="Amount (in microAlgos)"
+                onChange={amountinputhandler}
+              />
             </div>
             <div>
               <Note placeholder="Note" onChange={noteinputhandler} />
+            </div>
+            <div>
+              <Dropdown
+                onChange={(e) => {
+                  setAPIurl(e);
+                }}
+              />
             </div>
             <div>
               <SendTransaction onClick={formValidator} />
