@@ -169,6 +169,7 @@ function App() {
         flag
           ? alert("you have imported this account already!")
           : setGeneratedaccounts([...generatedaccounts, accountdetail]);
+        setShowinputMnemonic(false);
       } catch (e) {
         alert("Please Input correct mnemonic key");
       }
