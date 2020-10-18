@@ -8,9 +8,10 @@ Algorand is a permissionless and pure proof-of-stake blockchain. It enables tran
 
 # Features
 - Generate as many accounts as you want.
-- allows you to send transactions to algorand testnet.
+- allows you to send transactions to both algorand Mainnet and testnet .
 - It takes care of setting minimum possible fee automatically for your transaction.
 - allows you to export seed phrases to your computer machine.
+- allows you to restore accounts using mnemonic seed phrase.
 
 
 # Web App Link
@@ -29,7 +30,12 @@ You can Run the following command using Terminal/CMD:
 ```sh
 $ npm install
 ```
+# Run Locally
 
+You can Run the following command using Terminal/CMD:
+```sh
+$ npm start
+```
 # Dependencies
 
 - react
