@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "dc2eea2eb0a05fe8c56e5635daba356c",
+    "revision": "f92a82344c4ebef30c51aeb0ca5f5d89",
     "url": "/Algorand-Wallet/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/Algorand-Wallet/static/css/2.d9ad5f5c.chunk.css"
   },
   {
-    "revision": "9b6c5350ae31680b3cdd",
+    "revision": "7ad8ddbe8f36fae1336f",
     "url": "/Algorand-Wallet/static/css/main.b18aa8e4.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/Algorand-Wallet/static/js/2.2bfa89b9.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "9b6c5350ae31680b3cdd",
-    "url": "/Algorand-Wallet/static/js/main.859038f8.chunk.js"
+    "revision": "7ad8ddbe8f36fae1336f",
+    "url": "/Algorand-Wallet/static/js/main.2266ddf7.chunk.js"
   },
   {
     "revision": "838d41b4b5af1c456ebb",

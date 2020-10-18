@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/Algorand-Wallet/static/css/main.b18aa8e4.chunk.css",
-    "main.js": "/Algorand-Wallet/static/js/main.859038f8.chunk.js",
-    "main.js.map": "/Algorand-Wallet/static/js/main.859038f8.chunk.js.map",
+    "main.js": "/Algorand-Wallet/static/js/main.2266ddf7.chunk.js",
+    "main.js.map": "/Algorand-Wallet/static/js/main.2266ddf7.chunk.js.map",
     "runtime-main.js": "/Algorand-Wallet/static/js/runtime-main.3aea0540.js",
     "runtime-main.js.map": "/Algorand-Wallet/static/js/runtime-main.3aea0540.js.map",
     "static/css/2.d9ad5f5c.chunk.css": "/Algorand-Wallet/static/css/2.d9ad5f5c.chunk.css",
     "static/js/2.2bfa89b9.chunk.js": "/Algorand-Wallet/static/js/2.2bfa89b9.chunk.js",
     "static/js/2.2bfa89b9.chunk.js.map": "/Algorand-Wallet/static/js/2.2bfa89b9.chunk.js.map",
     "index.html": "/Algorand-Wallet/index.html",
-    "precache-manifest.404d11812768d81f9d287e534b96e913.js": "/Algorand-Wallet/precache-manifest.404d11812768d81f9d287e534b96e913.js",
+    "precache-manifest.3a9423fa8e1e601e2760db5acfebd61a.js": "/Algorand-Wallet/precache-manifest.3a9423fa8e1e601e2760db5acfebd61a.js",
     "service-worker.js": "/Algorand-Wallet/service-worker.js",
     "static/css/2.d9ad5f5c.chunk.css.map": "/Algorand-Wallet/static/css/2.d9ad5f5c.chunk.css.map",
     "static/css/main.b18aa8e4.chunk.css.map": "/Algorand-Wallet/static/css/main.b18aa8e4.chunk.css.map",
@@ -20,6 +20,6 @@
     "static/css/2.d9ad5f5c.chunk.css",
     "static/js/2.2bfa89b9.chunk.js",
     "static/css/main.b18aa8e4.chunk.css",
-    "static/js/main.859038f8.chunk.js"
+    "static/js/main.2266ddf7.chunk.js"
   ]
 }

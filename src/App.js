@@ -265,102 +265,104 @@ function App() {
   };
 
   return (
-    <div className="parent" fluid>
-      <NavbarHeading />
+    <>
+      <div className="parent" fluid>
+        <NavbarHeading />
 
-      <Container className="App">
-        <Toasttxn
-          showtoast={showtoast}
-          transactionID={txnID}
-          closetoast={closetoast}
-        />
+        <Container className="App">
+          <Toasttxn
+            showtoast={showtoast}
+            transactionID={txnID}
+            closetoast={closetoast}
+          />
 
-        <Container className="parent-jumbotron" fluid>
-          <div className="wallet-main ">
-            <div>
-              <Logo />
-            </div>
-            <div>
-              <BalanceDetail balance={balance} />
-            </div>
+          <Container className="parent-jumbotron" fluid>
+            <div className="wallet-main ">
+              <div>
+                <Logo />
+              </div>
+              <div>
+                <BalanceDetail balance={balance} />
+              </div>
 
-            <div>
-              <Address address={account.addr} />
+              <div>
+                <Address address={account.addr} />
+              </div>
+              <div>
+                <AddressInput placeholder="To" onChange={addressinputhandler} />
+              </div>
+              <div>
+                <AmountInput
+                  placeholder="Amount (in microAlgos)"
+                  onChange={amountinputhandler}
+                />
+              </div>
+              <div>
+                <Note placeholder="Note" onChange={noteinputhandler} />
+              </div>
+              <div>
+                <Dropdown
+                  onChange={(e) => {
+                    setAPIurl(e);
+                  }}
+                />
+              </div>
+              <div>
+                <SendTransaction onClick={formValidator} />
+              </div>
             </div>
-            <div>
-              <AddressInput placeholder="To" onChange={addressinputhandler} />
+            <br />
+            <div className="generate-btn">
+              <Generate onClick={accountGenerator} />
             </div>
-            <div>
-              <AmountInput
-                placeholder="Amount (in microAlgos)"
-                onChange={amountinputhandler}
+            <br />
+            <div className="import-btn">
+              <ImportButton
+                onClick={toggleseedphrasemodal}
+                sendPhrase={() => {
+                  importSecretkey();
+                }}
               />
-            </div>
-            <div>
-              <Note placeholder="Note" onChange={noteinputhandler} />
-            </div>
-            <div>
-              <Dropdown
+              <SeedphraseInputModal
+                toggleflag={showinputMnemonic}
                 onChange={(e) => {
-                  setAPIurl(e);
+                  mnemonicinputhandler(e);
+                }}
+                onClick={importSecretkey}
+                closemodal={() => {
+                  closeseedphrasemodal();
                 }}
               />
             </div>
-            <div>
-              <SendTransaction onClick={formValidator} />
+            <div className="accounts">
+              <MnemonicModal
+                flag={showMnemonic}
+                generatedkey={mnemonickey}
+                closeModal={closeModal}
+              />
+              {generatedaccounts.map((account, index) => {
+                return (
+                  <AccountDisplay
+                    publickey={account.addr}
+                    privatekey={account.sk}
+                    key={index}
+                    exportsk={() => {
+                      let mnemonic = algosdk.secretKeyToMnemonic(account.sk);
+                      downloadTxtFile(mnemonic);
+                    }}
+                    mnemonic={() => mnemonicGenerator(account.sk)}
+                    onClick={() => {
+                      selectedAccount(account);
+                    }}
+                  />
+                );
+              })}
             </div>
-          </div>
-          <br />
-          <div className="generate-btn">
-            <Generate onClick={accountGenerator} />
-          </div>
-          <br />
-          <div className="import-btn">
-            <ImportButton
-              onClick={toggleseedphrasemodal}
-              sendPhrase={() => {
-                importSecretkey();
-              }}
-            />
-            <SeedphraseInputModal
-              toggleflag={showinputMnemonic}
-              onChange={(e) => {
-                mnemonicinputhandler(e);
-              }}
-              onClick={importSecretkey}
-              closemodal={() => {
-                closeseedphrasemodal();
-              }}
-            />
-          </div>
-          <div className="accounts">
-            <MnemonicModal
-              flag={showMnemonic}
-              generatedkey={mnemonickey}
-              closeModal={closeModal}
-            />
-            {generatedaccounts.map((account, index) => {
-              return (
-                <AccountDisplay
-                  publickey={account.addr}
-                  privatekey={account.sk}
-                  key={index}
-                  exportsk={() => {
-                    let mnemonic = algosdk.secretKeyToMnemonic(account.sk);
-                    downloadTxtFile(mnemonic);
-                  }}
-                  mnemonic={() => mnemonicGenerator(account.sk)}
-                  onClick={() => {
-                    selectedAccount(account);
-                  }}
-                />
-              );
-            })}
-          </div>
+          </Container>
         </Container>
-      </Container>
+      </div>
       <Footer />
-    </div>
+    </>
   );
 }
 

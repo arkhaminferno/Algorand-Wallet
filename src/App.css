@@ -167,7 +167,13 @@ td {
 .footer-align {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
+  color: white;
+}
+
+.footer-spacing {
+  display: flex;
+  flex-direction: row;
 }
 
 #footerHead {
