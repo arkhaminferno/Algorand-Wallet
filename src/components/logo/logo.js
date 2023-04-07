@@ -1,5 +1,7 @@
 import React from "react";
 import { Container, Image } from "react-bootstrap";
+import algorandLogo from "../../icons/algorandlogo.svg"
+import "./logo.css";
 /**
  * This component will display logo of Algorand Blockchain.
  *
@@ -8,12 +10,7 @@ import { Container, Image } from "react-bootstrap";
 function logo() {
   return (
     <Container className="center " fluid>
-      <Image
-        id="logo"
-        src="./algorandlogo.svg"
-        className="logobg"
-        roundedCircle
-      />
+      <Image id="logo" src={algorandLogo} className="logobg"  roundedCircle />
     </Container>
   );
 }

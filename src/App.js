@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "react-bootstrap";
 import axios from "axios";
 import "./App.css";
 import algosdk from "algosdk";
@@ -12,7 +11,6 @@ import { Container } from "react-bootstrap";
 import Generate from "./components/buttons/generate";
 import Dropdown from "./components/dropdown/dropdown";
 import NavbarHeading from "./components/navbar/navbar";
-import Select from "react-select";
 import SendTransaction from "./components/buttons/sendTransaction";
 import AddressInput from "./components/inputfield/address";
 import AmountInput from "./components/inputfield/amount";
@@ -61,17 +59,11 @@ function App() {
   const [txnID, setTxnID] = useState("");
   const [showinputMnemonic, setShowinputMnemonic] = useState(false);
   const [txnsent, setTxnsent] = useState(false);
-  const [seconds, setSeconds] = useState(0);
   const [inputmnemonickey, setInputmnemonickey] = useState("");
   const [APIurl, setAPIurl] = useState("https://api.algoexplorer.io");
 
   useEffect(() => {
     getParams();
-    // const interval = setInterval(() => {
-    //   setSeconds((seconds) => seconds + 1);
-    //   balanceGetter(account.addr);
-    // }, 10000);
-    // return () => clearInterval(interval);
   }, [APIurl]);
 
   // Function for getting parameters from the algorand blockchain
@@ -201,10 +193,6 @@ function App() {
   };
   const closetoast = () => {
     setShowtoast(false);
-    setTxnsent(false);
-  };
-
-  const txnstatus = () => {
     setTxnsent(false);
   };
 

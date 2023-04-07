@@ -1,5 +1,6 @@
 import React from "react";
 import { Container } from "react-bootstrap";
+import algorandLogo from "../../icons/algosmall.png"
 /**
  * This component will display balance of a address.
  * @props balance: -> displays the balance of a address
@@ -14,7 +15,12 @@ function balance(props) {
           Balance: &nbsp;
           {props.balance}
           &nbsp;
-          <img src="./algosmall.png" height="18px" width="17px" />
+          <img
+            src={algorandLogo}
+            height="18px"
+            width="17px"
+            alt="algorand-logo"
+          />
         </div>
       </div>
     </Container>

@@ -14,7 +14,7 @@ function address(props) {
           Your Wallet Address:
         </p>
         <p style={{ fontSize: "small", wordWrap: "break-word" }}>
-          {props.address}
+          {props.address ? props.address : "Please Import or generate wallet address."}
         </p>
       </div>
     </Container>
