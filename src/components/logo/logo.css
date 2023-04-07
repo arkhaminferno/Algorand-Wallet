@@ -1,0 +1,12 @@
+#logo{
+    height: 12rem;
+    width: 12rem;
+}
+
+
+@media only screen and (max-width: 550px) {
+    #logo{
+        height: 6rem;
+        width: 6rem;
+    }
+}

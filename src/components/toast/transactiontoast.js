@@ -1,5 +1,5 @@
 import React from "react";
-import { Toast, Container } from "react-bootstrap";
+import { Toast } from "react-bootstrap";
 /**
  * This component will generate toast notification after successfull transaction confirmation.
  * @props transactionID: -> this will display the txn ID on the toast body.
@@ -24,6 +24,7 @@ function transactiontoast(props) {
         <a
           href={`https://testnet.algoexplorer.io/tx/${props.transactionID}`}
           target="_blank"
+          rel="noopener noreferrer"
         >
           {" "}
           Click to Verify at Algo Explorer{" "}
